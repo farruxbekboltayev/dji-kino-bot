@@ -8,7 +8,7 @@ TOKEN = "8233016763:AAFvBHx4_NptrrwwEIABnrnu1KAWZHzgOCs"
 MOVIE_CHANNEL = "@DJI_kino"
 
 # majburiy obuna kanali
-SUB_CHANNEL = "@tropisms"
+SUB_CHANNELS = ["@tropisms", "https://t.me/+bf9UOHIAd1tkNDYx"]
 
 # kod : post ID
 movies = {
@@ -29,12 +29,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # a'zolikni tekshirish
 async def check_subscription(user_id, context):
-    try:
-        member = await context.bot.get_chat_member(SUB_CHANNEL, user_id)
-        return member.status in ["member", "administrator", "creator"]
-    except BadRequest:
-        return False
 
+    for channel in SUB_CHANNELS:
+
+        member = await context.bot.get_chat_member(channel, user_id)
+
+        if member.status not in ["member", "administrator", "creator"]:
+            return False
+
+    return True
 # kino yuborish
 async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -52,7 +55,10 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton(
                 "📢 Kanalga a'zo bo'lish",
-                url=f"https://t.me/{SUB_CHANNEL[1:]}"
+               keyboard = InlineKeyboardMarkup([
+    [InlineKeyboardButton("1-kanal", url="https://t.me/tropisms")],
+    [InlineKeyboardButton("2-kanal", url="https://t.me/ikkinchi_kanal")]
+])
             )]
         ])
 
