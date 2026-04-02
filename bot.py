@@ -54,9 +54,8 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton(
-                "📢 Kanalga a'zo bo'lish",
     [InlineKeyboardButton("1-kanal", url="https://t.me/tropisms")],
-    [InlineKeyboardButton("2-kanal", url="https://t.me/ikkinchi_kanal")]
+    [InlineKeyboardButton("2-kanal", url="https://t.me/DJI_kino_kanal")]
 ])
             )]
         ])
