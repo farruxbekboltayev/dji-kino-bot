@@ -8,7 +8,7 @@ TOKEN = "8233016763:AAFvBHx4_NptrrwwEIABnrnu1KAWZHzgOCs"
 MOVIE_CHANNEL = "@DJI_kino"
 
 # majburiy obuna kanali
-SUB_CHANNELS = ["@tropisms", "https://t.me/+bf9UOHIAd1tkNDYx"]
+SUB_CHANNELS = ["@tropisms", "@DJI_kino_kanal"]
 
 # kod : post ID
 movies = {
