@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 
 TOKEN = "8233016763:AAFvBHx4_NptrrwwEIABnrnu1KAWZHzgOCs"
+ADMIN_ID =5702824058
 
 # kino olinadigan kanal
 MOVIE_CHANNEL = "@DJI_kino"
@@ -40,11 +41,20 @@ movies = {
     "132": 24
 }
 
+users = set()
 
 # start komandasi
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🎬 Kino kodini yuboring:")
 
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if update.effective_user.id != ADMIN_ID:
+        return
+
+    await update.message.reply_text(
+        f"Botdan foydalanganlar soni: {len(users)} ta 👥"
+    )
 
 # a'zolikni tekshirish
 async def check_subscription(user_id, context):
@@ -117,6 +127,8 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.effective_user.id
 
+    users.add(user_id)
+
     code = update.message.text.strip()
 
     subscribed = await check_subscription(user_id, context)
@@ -163,6 +175,8 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
+
+app.add_handler(CommandHandler("stats", stats))
 
 app.add_handler(CallbackQueryHandler(check_button, pattern="check_sub"))
 
