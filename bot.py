@@ -10,7 +10,7 @@ from telegram.ext import (
 
 TOKEN = "8233016763:AAFvBHx4_NptrrwwEIABnrnu1KAWZHzgOCs"
 ADMIN_ID =5702824058
-LOG_CHANNEL = 1003453311549
+LOG_CHANNEL = -1003453311549
 
 # kino olinadigan kanal
 MOVIE_CHANNEL = "@DJI_kino"
