@@ -129,10 +129,9 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
     if user_id not in users:
+       users.add(user_id)
 
-    users.add(user_id)
-
-    username = update.effective_user.username
+       username = update.effective_user.username
 
     await context.bot.send_message(
 
