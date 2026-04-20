@@ -132,8 +132,8 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
        users.add(user_id)
 
        first_name = update.effective_user.first_name
-last_name = update.effective_user.last_name
-username = update.effective_user.username
+       last_name = update.effective_user.last_name
+       username = update.effective_user.username
 
 if username:
     username_text = f"@{username}"
@@ -154,11 +154,7 @@ Username: {username_text}
 ID: {user_id}"""
 )
 
-    await context.bot.send_message(
 
-        chat_id=LOG_CHANNEL,
-
-        text=f"Yangi foydalanuvchi 👤\nID: {user_id}\nUsername: @{username}"
 
     )
 
