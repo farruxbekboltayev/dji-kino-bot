@@ -127,74 +127,57 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     user_id = update.effective_user.id
+
     if user_id not in users:
-       users.add(user_id)
+        users.add(user_id)
 
         first_name = update.effective_user.first_name
         last_name = update.effective_user.last_name
         username = update.effective_user.username
 
-    if username:
-        username_text = f"@{username}"
-    else:
-        username_text = "Username yo'q"
+        if username:
+            username_text = f"@{username}"
+        else:
+            username_text = "Username yo'q"
 
-    if last_name:
-        full_name = f"{first_name} {last_name}"
-    else:
-        full_name = first_name
+        if last_name:
+            full_name = f"{first_name} {last_name}"
+        else:
+            full_name = first_name
 
-    await context.bot.send_message(
-        chat_id=LOG_CHANNEL,
-        text=f"""Yangi foydalanuvchi 👤
+        await context.bot.send_message(
+            chat_id=LOG_CHANNEL,
+            text=f"""Yangi foydalanuvchi 👤
 Ismi: {full_name}
 Username: {username_text}
 ID: {user_id}"""
-    )
-
+        )
 
     code = update.message.text.strip()
 
     subscribed = await check_subscription(user_id, context)
 
     if not subscribed:
-
         await update.message.reply_text(
-
             "❗ Kinoni olish uchun kanallarga a'zo bo'ling:",
-
             reply_markup=join_keyboard()
-
         )
-
         return
 
-
     if code in movies:
-
         try:
-
             await context.bot.copy_message(
-
                 chat_id=update.effective_chat.id,
-
                 from_chat_id=MOVIE_CHANNEL,
-
                 message_id=movies[code]
-
             )
-
         except Exception as e:
-
             print("kino yuborishda xato:", e)
-
             await update.message.reply_text("⚠️ Kino topilmadi")
-
     else:
-
         await update.message.reply_text("❌ Bunday kod yo'q")
 
-
+    
 # ishga tushirish
 app = Application.builder().token(TOKEN).build()
 
