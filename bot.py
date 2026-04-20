@@ -131,7 +131,28 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user_id not in users:
        users.add(user_id)
 
-       username = update.effective_user.username
+       first_name = update.effective_user.first_name
+last_name = update.effective_user.last_name
+username = update.effective_user.username
+
+if username:
+    username_text = f"@{username}"
+else:
+    username_text = "Username yo'q"
+
+if last_name:
+    full_name = f"{first_name} {last_name}"
+else:
+    full_name = first_name
+
+await context.bot.send_message(
+    chat_id=LOG_CHANNEL,
+    text=
+f"""Yangi foydalanuvchi 👤
+Ismi: {full_name}
+Username: {username_text}
+ID: {user_id}"""
+)
 
     await context.bot.send_message(
 
