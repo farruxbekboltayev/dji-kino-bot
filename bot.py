@@ -10,6 +10,7 @@ from telegram.ext import (
 
 TOKEN = "8233016763:AAFvBHx4_NptrrwwEIABnrnu1KAWZHzgOCs"
 ADMIN_ID =5702824058
+LOG_CHANNEL = 1003453311549
 
 # kino olinadigan kanal
 MOVIE_CHANNEL = "@DJI_kino"
@@ -127,7 +128,19 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.effective_user.id
 
+    if user_id not in users:
+
     users.add(user_id)
+
+    username = update.effective_user.username
+
+    await context.bot.send_message(
+
+        chat_id=LOG_CHANNEL,
+
+        text=f"Yangi foydalanuvchi 👤\nID: {user_id}\nUsername: @{username}"
+
+    )
 
     code = update.message.text.strip()
 
