@@ -155,27 +155,26 @@ async def send_movie(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     user_id = update.effective_user.id
+    code = update.message.text.strip()
 
-
+    try:
+        username = update.effective_user.username
         if username:
             username_text = f"@{username}"
         else:
             username_text = "Username yo'q"
 
-        if last_name:
-            full_name = f"{first_name} {last_name}"
-        else:
-            full_name = first_name
-
         await context.bot.send_message(
             chat_id=LOG_CHANNEL,
-            text=f"""Yangi foydalanuvchi 👤
-Ismi: {full_name}
+            text=f"""Yangi so'rov 🎬
+Ismi: {update.effective_user.first_name}
 Username: {username_text}
-ID: {user_id}"""
-        )
+ID: {user_id}
 
-    code = update.message.text.strip()
+Yozgani: {code}"""
+        )
+    except Exception as e:
+        print("So'rov logida xato:", e)
 
     subscribed = await check_subscription(user_id, context)
 
