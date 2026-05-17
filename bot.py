@@ -267,12 +267,15 @@ Yozgani: {code}"""
         await update.message.reply_text("❌ Bunday kod yo'q")
 
 
-def main():
-    if not TOKEN:
-        raise ValueError("TOKEN topilmadi. Railway Variables ga TOKEN qo'shing.")
+import asyncio
 
+async def run():
+    threading.Thread(target=start_server, daemon=True).start()
+
+    if not TOKEN:
+        raise ValueError("TOKEN topilmadi.")
     if not DATABASE_URL:
-        raise ValueError("DATABASE_URL topilmadi. Railway PostgreSQL ulang.")
+        raise ValueError("DATABASE_URL topilmadi.")
 
     init_db()
 
@@ -284,8 +287,10 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_movie))
 
     print("Bot ishlayapti...")
-    app.run_polling()
-
+    async with app:
+        await app.start()
+        await app.updater.start_polling()
+        await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run())
