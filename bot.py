@@ -14,7 +14,6 @@ def start_server():
     server.serve_forever()
     
 import os
-import psycopg2
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -26,7 +25,6 @@ from telegram.ext import (
 )
 
 TOKEN = os.getenv("TOKEN")
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 ADMIN_ID = 5702824058
 LOG_CHANNEL = -1003453311549
@@ -65,65 +63,6 @@ movies = {
 }
 
 
-def get_connection():
-    return psycopg2.connect(DATABASE_URL)
-
-
-def init_db():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            user_id BIGINT PRIMARY KEY,
-            first_name TEXT,
-            last_name TEXT,
-            username TEXT
-        )
-    """)
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-
-def add_user(user_id, first_name, last_name, username):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO users (user_id, first_name, last_name, username)
-        VALUES (%s, %s, %s, %s)
-        ON CONFLICT (user_id) DO NOTHING
-    """, (user_id, first_name, last_name, username))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-
-def user_exists(user_id):
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT 1 FROM users WHERE user_id = %s", (user_id,))
-    result = cur.fetchone()
-
-    cur.close()
-    conn.close()
-    return result is not None
-
-
-def get_user_count():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("SELECT COUNT(*) FROM users")
-    count = cur.fetchone()[0]
-
-    cur.close()
-    conn.close()
-    return count
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -145,10 +84,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         full_name = first_name
 
-    is_new_user = not user_exists(user_id)
-
-    if is_new_user:
-        add_user(user_id, first_name, last_name, username)
+    
 
         try:
             await context.bot.send_message(
@@ -164,18 +100,6 @@ ID: {user_id}"""
     await update.message.reply_text("🎬 Kino kodini yuboring:")
 
 
-async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not update.message:
-        return
-
-    if update.effective_user.id != ADMIN_ID:
-        return
-
-    count = get_user_count()
-
-    await update.message.reply_text(
-        f"Botdan foydalanganlar soni: {count} ta 👥"
-    )
 
 
 async def check_subscription(user_id, context):
@@ -274,15 +198,12 @@ async def run():
 
     if not TOKEN:
         raise ValueError("TOKEN topilmadi.")
-    if not DATABASE_URL:
-        raise ValueError("DATABASE_URL topilmadi.")
-
-    init_db()
+    
 
     app = Application.builder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("stats", stats))
+
     app.add_handler(CallbackQueryHandler(check_button, pattern="check_sub"))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_movie))
 
